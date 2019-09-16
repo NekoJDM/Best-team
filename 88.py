@@ -5,4 +5,4 @@ while i<80:
 	print(i)
 	i+=1
 
-a=read();
+a=input();
