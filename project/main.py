@@ -2,7 +2,7 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 import logging
 import requests
 import time
-
+from func import start, help
     
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -10,13 +10,7 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 
 logger = logging.getLogger(__name__)
 
-def start(update, context):
-    """Send a message when the command /start is issued."""
-    update.message.reply_text('Hi!')
 
-def help(update, context):
-    """Send a message when the command /help is issued."""
-    update.message.reply_text('Help!')
 
 
 def echo(update, context):
