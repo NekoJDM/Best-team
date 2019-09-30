@@ -5,8 +5,7 @@ from telegram.ext import MessageHandler
 
 from echo.connfig import TG_TOKEN
 
-asdasdasdasdasdasda
+
 print("404 not found")
 input()
 
-#editasdasdasdasdasdasd
