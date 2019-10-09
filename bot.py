@@ -9,15 +9,13 @@ bot = telebot.TeleBot(config.TOKEN)
 
 text_messages = {
 	'start':
-		u'Приветствую тебя, {name}!\n'
-		u'Я помогу тебе сделать онлайн заказ (это быстро и без очереди).\n\n'
-		u'1. Выбери интересующий напиток/сэндвич/десерт (Ты можешь выбрать несколько)\n'
-		u'2. Выбери время, когда захочешь забрать заказ\n'
-		u'3. Оплати заказ (это безопасно)\n'
-		u'4. Обязательно забери заказ вовремя',
+		u'Привіт, {name}!\n'
+		u'Я допоможу тобі зробити онлайн замовлення (це швидко і без черги).\n\n'
+		u'1. Вибери напій/десерт який тобі сподобався (Ти можеш вибрати декілька)\n'
+		u'2. Оплати замовлення',
 	
 	'help':
-		u'Пока что я не знаю, чем тебе помочь, поэтому просто выпей кофе!'
+		u'Поки я не знаю, чим тобі допомогти, тому просто випий каву!'
 }
 
 
@@ -37,3 +35,29 @@ def send_help(message):
 	markup.row('Назад')
 	msg = bot.send_message(message.from_user.id, text_messages['help'], reply_markup=markup)
 	bot.register_next_step_handler(msg, send_welcome)
+
+
+@bot.message_handler(func=lambda message: db_users.get_current_state(message.from_user.id) == config.S_GET_CAT)
+def get_categories(message):
+	user_id = message.from_user.id
+	mass = list(gh_menu.keys())
+	markup = create_menu(mass, back=False)
+	bot.send_message(user_id, 'Что вас интересует?', reply_markup=markup)
+	db_users.set_state(user_id, config.S_CHOOSE_CAT)
+
+
+
+
+@bot.message_handler(func=lambda message: db_users.get_current_state(message.from_user.id) == config.S_CHOOSE_CAT)
+def choose_categories(message):
+	user_id = message.from_user.id
+
+	if message.text == 'Особые напитки':
+		db_users.set_state(user_id, config.S_SPECIAL_DRINKS)
+		get_special_drinks(message)
+	elif message.text == 'Кофе':
+		db_users.set_state(user_id, config.S_COFFEE)
+		get_coffee(message)
+	elif message.text == 'Горячие напитки':
+		db_users.set_state(user_id, config.S_HOT_DRINKS)
+		get_hot_drinks(message)
