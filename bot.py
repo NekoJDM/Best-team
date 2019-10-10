@@ -9,13 +9,15 @@ bot = telebot.TeleBot(config.TOKEN)
 
 text_messages = {
 	'start':
-		u'Привіт, {name}!\n'
-		u'Я допоможу тобі зробити онлайн замовлення (це швидко і без черги).\n\n'
-		u'1. Вибери напій/десерт який тобі сподобався (Ти можеш вибрати декілька)\n'
-		u'2. Оплати замовлення',
+		u'Приветствую тебя, {name}!\n'
+		u'Я помогу тебе сделать онлайн заказ (это быстро и без очереди).\n\n'
+		u'1. Выбери интересующий напиток/сэндвич/десерт (Ты можешь выбрать несколько)\n'
+		u'2. Выбери время, когда захочешь забрать заказ\n'
+		u'3. Оплати заказ (это безопасно)\n'
+		u'4. Обязательно забери заказ вовремя',
 	
 	'help':
-		u'Поки я не знаю, чим тобі допомогти, тому просто випий каву!'
+		u'Пока что я не знаю, чем тебе помочь, поэтому просто выпей кофе!'
 }
 
 
@@ -39,6 +41,9 @@ def send_help(message):
 
 @bot.message_handler(func=lambda message: db_users.get_current_state(message.from_user.id) == config.S_GET_CAT)
 def get_categories(message):
+	"""
+	This function allows to get a list of categories
+	"""
 	user_id = message.from_user.id
 	mass = list(gh_menu.keys())
 	markup = create_menu(mass, back=False)
@@ -46,8 +51,13 @@ def get_categories(message):
 	db_users.set_state(user_id, config.S_CHOOSE_CAT)
 
 
+
+# !!!  ЭТО ПРОМЕЖУТОЧНАЯ ФУНКЦИЯ  !!!
 @bot.message_handler(func=lambda message: db_users.get_current_state(message.from_user.id) == config.S_CHOOSE_CAT)
 def choose_categories(message):
+	"""
+	This function allows to choose a category
+	"""
 	user_id = message.from_user.id
 
 	if message.text == 'Особые напитки':
@@ -60,25 +70,36 @@ def choose_categories(message):
 		db_users.set_state(user_id, config.S_HOT_DRINKS)
 		get_hot_drinks(message)
 
+
+
 @bot.message_handler(func=lambda message: db_users.get_current_state(message.from_user.id) == config.S_SPECIAL_DRINKS)
 def get_special_drinks(message):
-	
+	"""
+	This function allows to get a list of special drinks
+	"""
 	special_drinks = Goods(bot, message, config.S_CHOOSE_GOOD)
 	special_drinks.get_goods_list()
 
 
 @bot.message_handler(func=lambda message: db_users.get_current_state(message.from_user.id) == config.S_COFFEE)
 def get_coffee(message):
+	"""
+	This function allows to get a list of coffee
+	"""
 	coffee = Goods(bot, message, config.S_CHOOSE_GOOD)
 	coffee.get_goods_list()
 
 
 @bot.message_handler(func=lambda message: db_users.get_current_state(message.from_user.id) == config.S_HOT_DRINKS)
 def get_hot_drinks(message):
+	"""
+	This function allows to get a list of hot drinks
+	"""
 	hot_drinks = Goods(bot, message, config.S_CHOOSE_GOOD)
 	hot_drinks.get_goods_list()
 
 
+# ЭТО ПРОМЕЖУТОЧНАЯ ФУНКЦИЯ
 @bot.message_handler(func=lambda message: db_users.get_current_state(message.from_user.id) == config.S_CHOOSE_GOOD)
 def choose_good(message):
 	"""
@@ -106,6 +127,21 @@ def choose_good(message):
 	elif message.text == 'Чай':
 		db_users.set_state(user_id, config.S_TEA)
 		get_tea(message)
+
+# Функція Пилипчука
+@bot.message_handler(func=lambda message: (db_users.get_current_state(message.from_user.id) == config.S_LATTE_LAVANDA_SHALFEI) or (db_users.get_current_state(message.from_user.id) == config.S_RAF_LEMON_PIE) )
+def choose_good1(message):
+	"""
+	This function allows to choose a goods
+	"""
+	user_id = message.from_user.id
+	if message.text == "Назад":
+		db_users.set_state(user_id, config.S_SPECIAL_DRINKS)
+		message.text = 'Особые напитки'
+		get_special_drinks(message)
+
+
+
 
 @bot.message_handler(func=lambda message: db_users.get_current_state(message.from_user.id) == config.S_LATTE_LAVANDA_SHALFEI)
 def get_latte_lavanda_shalfei(message):
