@@ -9,15 +9,13 @@ bot = telebot.TeleBot(config.TOKEN)
 
 text_messages = {
 	'start':
-		u'Приветствую тебя, {name}!\n'
-		u'Я помогу тебе сделать онлайн заказ (это быстро и без очереди).\n\n'
-		u'1. Выбери интересующий напиток/сэндвич/десерт (Ты можешь выбрать несколько)\n'
-		u'2. Выбери время, когда захочешь забрать заказ\n'
-		u'3. Оплати заказ (это безопасно)\n'
-		u'4. Обязательно забери заказ вовремя',
+		u'Привіт, {name}!\n'
+		u'Я допоможу тобі зробити онлайн замовлення (це швидко і без черги).\n\n'
+		u'1. Вибери напій/десерт який тобі сподобався (Ти можеш вибрати декілька)\n'
+		u'2. Оплати замовлення',
 	
 	'help':
-		u'Пока что я не знаю, чем тебе помочь, поэтому просто выпей кофе!'
+		u'Поки я не знаю, чим тобі допомогти, тому просто випий каву!'
 }
 
 
@@ -41,9 +39,7 @@ def send_help(message):
 
 @bot.message_handler(func=lambda message: db_users.get_current_state(message.from_user.id) == config.S_GET_CAT)
 def get_categories(message):
-	"""
-	This function allows to get a list of categories
-	"""
+
 	user_id = message.from_user.id
 	mass = list(gh_menu.keys())
 	markup = create_menu(mass, back=False)
@@ -52,12 +48,10 @@ def get_categories(message):
 
 
 
-# !!!  ЭТО ПРОМЕЖУТОЧНАЯ ФУНКЦИЯ  !!!
+
 @bot.message_handler(func=lambda message: db_users.get_current_state(message.from_user.id) == config.S_CHOOSE_CAT)
 def choose_categories(message):
-	"""
-	This function allows to choose a category
-	"""
+
 	user_id = message.from_user.id
 
 	if message.text == 'Особые напитки':
@@ -74,27 +68,21 @@ def choose_categories(message):
 
 @bot.message_handler(func=lambda message: db_users.get_current_state(message.from_user.id) == config.S_SPECIAL_DRINKS)
 def get_special_drinks(message):
-	"""
-	This function allows to get a list of special drinks
-	"""
+
 	special_drinks = Goods(bot, message, config.S_CHOOSE_GOOD)
 	special_drinks.get_goods_list()
 
 
 @bot.message_handler(func=lambda message: db_users.get_current_state(message.from_user.id) == config.S_COFFEE)
 def get_coffee(message):
-	"""
-	This function allows to get a list of coffee
-	"""
+
 	coffee = Goods(bot, message, config.S_CHOOSE_GOOD)
 	coffee.get_goods_list()
 
 
 @bot.message_handler(func=lambda message: db_users.get_current_state(message.from_user.id) == config.S_HOT_DRINKS)
 def get_hot_drinks(message):
-	"""
-	This function allows to get a list of hot drinks
-	"""
+
 	hot_drinks = Goods(bot, message, config.S_CHOOSE_GOOD)
 	hot_drinks.get_goods_list()
 
@@ -102,9 +90,7 @@ def get_hot_drinks(message):
 # ЭТО ПРОМЕЖУТОЧНАЯ ФУНКЦИЯ
 @bot.message_handler(func=lambda message: db_users.get_current_state(message.from_user.id) == config.S_CHOOSE_GOOD)
 def choose_good(message):
-	"""
-	This function allows to choose a goods
-	"""
+
 	user_id = message.from_user.id
 	if message.text == "Назад":
 		db_users.set_state(user_id, config.S_CHOOSE_CAT)
@@ -131,9 +117,7 @@ def choose_good(message):
 # Функція Пилипчука
 @bot.message_handler(func=lambda message: (db_users.get_current_state(message.from_user.id) == config.S_LATTE_LAVANDA_SHALFEI) or (db_users.get_current_state(message.from_user.id) == config.S_RAF_LEMON_PIE) )
 def choose_good1(message):
-	"""
-	This function allows to choose a goods
-	"""
+
 	user_id = message.from_user.id
 	if message.text == "Назад":
 		db_users.set_state(user_id, config.S_SPECIAL_DRINKS)
@@ -145,54 +129,42 @@ def choose_good1(message):
 
 @bot.message_handler(func=lambda message: db_users.get_current_state(message.from_user.id) == config.S_LATTE_LAVANDA_SHALFEI)
 def get_latte_lavanda_shalfei(message):
-	"""
-	This function allows to get a parameters of latte_lavanda_shalfei
-	"""
+
 	latte_lavanda_shalfei = Goods(bot, message, config.S_LATTE_LAVANDA_SHALFEI)
 	latte_lavanda_shalfei.get_current_good(config.S_SPECIAL_DRINKS)
 
 
 @bot.message_handler(func=lambda message: db_users.get_current_state(message.from_user.id) == config.S_RAF_LEMON_PIE)
 def get_raf_lemon_pie(message):
-	"""
-	This function allows to get a parameters of raf_lemon_pie
-	"""
+
 	raf_lemon_pie = Goods(bot, message, config.S_RAF_LEMON_PIE)
 	raf_lemon_pie.get_current_good(config.S_SPECIAL_DRINKS)
 
 
 @bot.message_handler(func=lambda message: db_users.get_current_state(message.from_user.id) == config.S_KAPUCHINO)
 def get_kapuchino(message):
-	"""
-	This function allows to get a parameters of kapuchino
-	"""
+
 	kapuchino = Goods(bot, message, config.S_KAPUCHINO)
 	kapuchino.get_current_good(config.S_COFFEE)
 
 
 @bot.message_handler(func=lambda message: db_users.get_current_state(message.from_user.id) == config.S_LATTE_MAKIATO)
 def get_latte_makiato(message):
-	"""
-	This function allows to get a parameters of latte_makiato
-	"""
+
 	latte_makiato = Goods(bot, message, config.S_LATTE_MAKIATO)
 	latte_makiato.get_current_good(config.S_COFFEE)
 
 
 @bot.message_handler(func=lambda message: db_users.get_current_state(message.from_user.id) == config.S_KAKAO)
 def get_kakao(message):
-	"""
-	This function allows to get a parameters of kakao
-	"""
+
 	kakao = Goods(bot, message, config.S_KAKAO)
 	kakao.get_current_good(config.S_HOT_DRINKS)
 
 
 @bot.message_handler(func=lambda message: db_users.get_current_state(message.from_user.id) == config.S_TEA)
 def get_tea(message):
-	"""
-	This function allows to get a parameters of tea
-	"""
+
 	tea = Goods(bot, message, config.S_TEA)
 	tea.get_current_good(config.S_HOT_DRINKS)
 
