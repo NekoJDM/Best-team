@@ -123,7 +123,7 @@ def choose_good1(message):
 		message.text = 'Особые напитки'
 		get_special_drinks(message)
 
-# Функція Поліщука
+
 @bot.message_handler(func=lambda message: (db_users.get_current_state(message.from_user.id) == config.S_KAPUCHINO) or (db_users.get_current_state(message.from_user.id) == config.S_LATTE_MAKIATO) )
 def choose_good2(message):
 	user_id = message.from_user.id
@@ -132,6 +132,13 @@ def choose_good2(message):
 		message.text = 'Кофе'
 		get_special_drinks(message)
 
+@bot.message_handler(func=lambda message: (db_users.get_current_state(message.from_user.id) == config.S_KAKAO) or (db_users.get_current_state(message.from_user.id) == config.S_TEA) )
+def choose_good3(message):
+	user_id = message.from_user.id
+	if message.text == "Назад":
+		db_users.set_state(user_id, config.S_HOT_DRINKS)
+		message.text = 'Горячие напитки'
+		get_special_drinks(message)
 
 @bot.message_handler(func=lambda message: db_users.get_current_state(message.from_user.id) == config.S_LATTE_LAVANDA_SHALFEI)
 def get_latte_lavanda_shalfei(message):
