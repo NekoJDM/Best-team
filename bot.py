@@ -46,8 +46,6 @@ def get_categories(message):
 	db_users.set_state(user_id, config.S_CHOOSE_CAT)
 
 
-
-
 @bot.message_handler(func=lambda message: db_users.get_current_state(message.from_user.id) == config.S_CHOOSE_CAT)
 def choose_categories(message):
 	user_id = message.from_user.id
@@ -61,3 +59,50 @@ def choose_categories(message):
 	elif message.text == 'Горячие напитки':
 		db_users.set_state(user_id, config.S_HOT_DRINKS)
 		get_hot_drinks(message)
+
+@bot.message_handler(func=lambda message: db_users.get_current_state(message.from_user.id) == config.S_SPECIAL_DRINKS)
+def get_special_drinks(message):
+	
+	special_drinks = Goods(bot, message, config.S_CHOOSE_GOOD)
+	special_drinks.get_goods_list()
+
+
+@bot.message_handler(func=lambda message: db_users.get_current_state(message.from_user.id) == config.S_COFFEE)
+def get_coffee(message):
+	coffee = Goods(bot, message, config.S_CHOOSE_GOOD)
+	coffee.get_goods_list()
+
+
+@bot.message_handler(func=lambda message: db_users.get_current_state(message.from_user.id) == config.S_HOT_DRINKS)
+def get_hot_drinks(message):
+	hot_drinks = Goods(bot, message, config.S_CHOOSE_GOOD)
+	hot_drinks.get_goods_list()
+
+
+@bot.message_handler(func=lambda message: db_users.get_current_state(message.from_user.id) == config.S_CHOOSE_GOOD)
+def choose_good(message):
+	"""
+	This function allows to choose a goods
+	"""
+	user_id = message.from_user.id
+	if message.text == "Назад":
+		db_users.set_state(user_id, config.S_CHOOSE_CAT)
+		get_categories(message)
+	if message.text == 'Латте Лаванда Шалфей':
+		db_users.set_state(user_id, config.S_LATTE_LAVANDA_SHALFEI)
+		get_latte_lavanda_shalfei(message)
+	elif message.text == 'Раф Лимонный Пай':
+		db_users.set_state(user_id, config.S_RAF_LEMON_PIE)
+		get_raf_lemon_pie(message)
+	elif message.text == 'Капучино':
+		db_users.set_state(user_id, config.S_KAPUCHINO)
+		get_kapuchino(message)
+	elif message.text == 'Латте Макиато':
+		db_users.set_state(user_id, config.S_LATTE_MAKIATO)
+		get_latte_makiato(message)
+	elif message.text == 'Какао':
+		db_users.set_state(user_id, config.S_KAKAO)
+		get_kakao(message)
+	elif message.text == 'Чай':
+		db_users.set_state(user_id, config.S_TEA)
+		get_tea(message)
