@@ -87,7 +87,6 @@ def get_hot_drinks(message):
 	hot_drinks.get_goods_list()
 
 
-# ЭТО ПРОМЕЖУТОЧНАЯ ФУНКЦИЯ
 @bot.message_handler(func=lambda message: db_users.get_current_state(message.from_user.id) == config.S_CHOOSE_GOOD)
 def choose_good(message):
 
@@ -124,7 +123,14 @@ def choose_good1(message):
 		message.text = 'Особые напитки'
 		get_special_drinks(message)
 
-
+# Функція Поліщука
+@bot.message_handler(func=lambda message: (db_users.get_current_state(message.from_user.id) == config.S_KAPUCHINO) or (db_users.get_current_state(message.from_user.id) == config.S_LATTE_MAKIATO) )
+def choose_good2(message):
+	user_id = message.from_user.id
+	if message.text == "Назад":
+		db_users.set_state(user_id, config.S_COFFEE)
+		message.text = 'Кофе'
+		get_special_drinks(message)
 
 
 @bot.message_handler(func=lambda message: db_users.get_current_state(message.from_user.id) == config.S_LATTE_LAVANDA_SHALFEI)
