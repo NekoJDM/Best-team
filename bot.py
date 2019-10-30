@@ -87,7 +87,10 @@ def get_hot_drinks(message):
 	hot_drinks.get_goods_list()
 
 
+<<<<<<< HEAD
 # ЭТО ПРОМЕЖУТОЧНАЯ ФУНКЦИЯ
+=======
+>>>>>>> 0a37d3c9c54b2c02873624df03cb0915e2149fa5
 @bot.message_handler(func=lambda message: db_users.get_current_state(message.from_user.id) == config.S_CHOOSE_GOOD)
 def choose_good(message):
 
@@ -125,7 +128,25 @@ def choose_good1(message):
 		get_special_drinks(message)
 
 
+<<<<<<< HEAD
 
+=======
+@bot.message_handler(func=lambda message: (db_users.get_current_state(message.from_user.id) == config.S_KAPUCHINO) or (db_users.get_current_state(message.from_user.id) == config.S_LATTE_MAKIATO) )
+def choose_good2(message):
+	user_id = message.from_user.id
+	if message.text == "Назад":
+		db_users.set_state(user_id, config.S_COFFEE)
+		message.text = 'Кофе'
+		get_special_drinks(message)
+
+@bot.message_handler(func=lambda message: (db_users.get_current_state(message.from_user.id) == config.S_KAKAO) or (db_users.get_current_state(message.from_user.id) == config.S_TEA) )
+def choose_good3(message):
+	user_id = message.from_user.id
+	if message.text == "Назад":
+		db_users.set_state(user_id, config.S_HOT_DRINKS)
+		message.text = 'Горячие напитки'
+		get_special_drinks(message)
+>>>>>>> 0a37d3c9c54b2c02873624df03cb0915e2149fa5
 
 @bot.message_handler(func=lambda message: db_users.get_current_state(message.from_user.id) == config.S_LATTE_LAVANDA_SHALFEI)
 def get_latte_lavanda_shalfei(message):
